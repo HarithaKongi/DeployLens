@@ -26,5 +26,10 @@
     "tailwindcss": "^4.1.13",
     "typescript": "^5.7.0",
     "@tailwindcss/postcss": "^4.1.13"
+  },
+  "allowScripts": {
+    "@prisma/client@6.19.3": true,
+    "@prisma/engines@6.19.3": true,
+    "prisma@6.19.3": true
   }
 }
