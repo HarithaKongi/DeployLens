@@ -1,6 +1,18 @@
 import { NextResponse } from "next/server";
 import { SignJWT } from "jose";
 
+const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID ?? "Iv23liLqMIfodPkw3iB6";
+
+function getAppUrl() {
+  const configured = process.env.NEXT_PUBLIC_APP_URL;
+  if (configured) return configured;
+  const productionHost = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  if (productionHost) return `https://${productionHost}`;
+  const deploymentHost = process.env.VERCEL_URL;
+  if (deploymentHost) return `https://${deploymentHost}`;
+  return "https://deploylens-iota.vercel.app";
+}
+
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
@@ -12,13 +24,15 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Invalid GitHub authorization state" }, { status: 400 });
   }
 
-  const clientId = process.env.GITHUB_CLIENT_ID;
   const clientSecret = process.env.GITHUB_CLIENT_SECRET;
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+  const appUrl = getAppUrl();
   const sessionSecret = process.env.SESSION_SECRET;
 
-  if (!clientId || !clientSecret || !appUrl || !sessionSecret) {
-    return NextResponse.json({ error: "GitHub App authorization is not fully configured" }, { status: 503 });
+  if (!clientSecret || !sessionSecret) {
+    return NextResponse.json(
+      { error: "GitHub authorization is missing GITHUB_CLIENT_SECRET or SESSION_SECRET in Vercel Production" },
+      { status: 503 },
+    );
   }
 
   const tokenResponse = await fetch("https://github.com/login/oauth/access_token", {
@@ -28,7 +42,7 @@ export async function GET(request: Request) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      client_id: clientId,
+      client_id: GITHUB_CLIENT_ID,
       client_secret: clientSecret,
       code,
       redirect_uri: new URL("/api/auth/github/callback", appUrl).toString(),
@@ -53,7 +67,7 @@ export async function GET(request: Request) {
     headers: {
       Authorization: `Bearer ${token.access_token}`,
       Accept: "application/vnd.github+json",
-      "X-GitHub-Api-Version": "2026-03-10",
+      "X-GitHub-Api-Version": "2022-11-28",
     },
     cache: "no-store",
   });
