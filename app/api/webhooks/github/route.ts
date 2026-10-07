@@ -31,7 +31,7 @@ export async function POST(request: Request) {
       create: { eventType: event, deliveryId, payload },
     });
 
-    if (event === "deployment") {
+    if (event === "deployment" || event === "deployment_status") {
       const repository = payload.repository;
       const deployment = payload.deployment;
       if (repository?.id && deployment?.id) {
