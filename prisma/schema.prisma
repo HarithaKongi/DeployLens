@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Repository {
+  id          String       @id @default(cuid())
+  githubId    String       @unique
+  name        String
+  fullName    String       @unique
+  defaultBranch String     @default("main")
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  deployments Deployment[]
+}
+
+model Deployment {
+  id           String       @id @default(cuid())
+  repositoryId String
+  commitSha    String
+  branch       String
+  status       DeploymentStatus
+  environment  String       @default("production")
+  durationMs   Int?
+  url          String?
+  errorMessage String?
+  createdAt    DateTime     @default(now())
+  repository   Repository   @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+
+  @@index([repositoryId, createdAt])
+}
+
+enum DeploymentStatus {
+  QUEUED
+  RUNNING
+  SUCCESS
+  FAILED
+  CANCELLED
+}
+
+model WebhookEvent {
+  id         String   @id @default(cuid())
+  eventType  String
+  deliveryId String   @unique
+  payload    Json
+  receivedAt DateTime @default(now())
+}
