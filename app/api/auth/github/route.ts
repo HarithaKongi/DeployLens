@@ -1,18 +1,25 @@
 import { NextResponse } from "next/server";
 
-export async function GET() {
-  const clientId = process.env.GITHUB_CLIENT_ID;
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID ?? "Iv23liLqMIfodPkw3iB6";
 
-  if (!clientId || !appUrl) {
-    return NextResponse.json({ error: "GitHub App is not configured" }, { status: 503 });
-  }
+function getAppUrl() {
+  const configured = process.env.NEXT_PUBLIC_APP_URL;
+  if (configured) return configured;
+  const productionHost = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  if (productionHost) return `https://${productionHost}`;
+  const deploymentHost = process.env.VERCEL_URL;
+  if (deploymentHost) return `https://${deploymentHost}`;
+  return "https://deploylens-iota.vercel.app";
+}
+
+export async function GET() {
+  const appUrl = getAppUrl();
 
   const state = crypto.randomUUID();
   const callback = new URL("/api/auth/github/callback", appUrl);
   const url = new URL("https://github.com/login/oauth/authorize");
 
-  url.searchParams.set("client_id", clientId);
+  url.searchParams.set("client_id", GITHUB_CLIENT_ID);
   url.searchParams.set("redirect_uri", callback.toString());
   url.searchParams.set("state", state);
   url.searchParams.set("allow_signup", "false");
