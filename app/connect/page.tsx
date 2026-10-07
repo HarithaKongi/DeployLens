@@ -8,13 +8,13 @@ export default function ConnectPage() {
           <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-500/15 text-blue-400"><Github /></div>
           <p className="text-sm font-medium text-blue-400">Connect your engineering workspace</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight">Bring your GitHub projects into DeployLens.</h1>
-          <p className="mt-4 leading-7 text-slate-400">DeployLens uses GitHub repository and deployment signals to build a focused view of release health. OAuth keeps your credentials out of the application.</p>
+          <p className="mt-4 leading-7 text-slate-400">Connect GitHub to analyze repositories, commits, and Actions workflow signals from one focused engineering dashboard.</p>
           <div className="mt-7 space-y-3">
-            <div className="flex gap-3 rounded-xl border border-white/10 bg-black/10 p-4"><ShieldCheck className="mt-0.5 text-emerald-400" size={19}/><div><p className="text-sm font-medium">Read-only by default</p><p className="mt-1 text-xs leading-5 text-slate-500">The initial integration is designed around repository metadata, commits, workflows, and deployment signals.</p></div></div>
-            <div className="flex gap-3 rounded-xl border border-white/10 bg-black/10 p-4"><LockKeyhole className="mt-0.5 text-blue-400" size={19}/><div><p className="text-sm font-medium">No tokens in the browser</p><p className="mt-1 text-xs leading-5 text-slate-500">OAuth secrets belong on the server and should never be committed to source control.</p></div></div>
+            <div className="flex gap-3 rounded-xl border border-white/10 bg-black/10 p-4"><ShieldCheck className="mt-0.5 text-emerald-400" size={19}/><div><p className="text-sm font-medium">Secure OAuth connection</p><p className="mt-1 text-xs leading-5 text-slate-500">Your GitHub credentials are handled server-side. Secrets are never exposed to the browser.</p></div></div>
+            <div className="flex gap-3 rounded-xl border border-white/10 bg-black/10 p-4"><LockKeyhole className="mt-0.5 text-blue-400" size={19}/><div><p className="text-sm font-medium">Built for engineering signals</p><p className="mt-1 text-xs leading-5 text-slate-500">DeployLens can use repository metadata, commits, workflow runs, and deployment events to calculate project health.</p></div></div>
           </div>
-          <button className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-400">Continue with GitHub <ArrowRight size={16}/></button>
-          <p className="mt-4 text-center text-xs text-slate-600">OAuth callback will be enabled in the authentication milestone.</p>
+          <a href="/api/auth/github" className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-400">Continue with GitHub <ArrowRight size={16}/></a>
+          <p className="mt-4 text-center text-xs text-slate-600">You can disconnect at any time.</p>
         </div>
       </div>
     </main>
