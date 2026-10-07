@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Activity, ArrowUpRight, CheckCircle2, Clock3, GitBranch, Github, ShieldCheck, TriangleAlert, type LucideIcon } from "lucide-react";
 
 const deployments = [
@@ -23,7 +24,7 @@ export default function Home() {
             <div className="grid h-9 w-9 place-items-center rounded-xl bg-blue-500/15 text-blue-400"><Activity size={20} /></div>
             <div><p className="font-semibold tracking-tight">DeployLens</p><p className="text-xs text-slate-500">Deployment Intelligence</p></div>
           </div>
-          <button className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-slate-200 hover:bg-white/[0.06]"><Github size={16}/> Connect GitHub</button>
+          <Link href="/connect" className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-slate-200 hover:bg-white/[0.06]"><Github size={16}/> Connect GitHub</Link>
         </div>
       </header>
       <section className="mx-auto max-w-7xl px-6 py-10">
@@ -44,7 +45,7 @@ export default function Home() {
         <div className="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]">
           <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
             <div><h2 className="font-semibold">Recent deployments</h2><p className="mt-1 text-xs text-slate-500">Latest repository releases and build results</p></div>
-            <button className="text-sm text-blue-400 hover:text-blue-300">View all</button>
+            <Link href="/repositories" className="text-sm text-blue-400 hover:text-blue-300">View all</Link>
           </div>
           <div className="divide-y divide-white/5">
             {deployments.map((deployment) => (
