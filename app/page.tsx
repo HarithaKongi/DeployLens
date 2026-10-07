@@ -7,11 +7,11 @@ const deployments = [
   { repo: "CivicFix", branch: "main", status: "Healthy", time: "5h ago", duration: "1m 08s" }
 ];
 
-const metrics: Array<[string, string, string, LucideIcon]> = [
-  ["Health score", "94 / 100", "2 points this week", ShieldCheck],
-  ["Deployments", "28", "7 this week", ArrowUpRight],
-  ["Success rate", "96.4%", "↑ 3.1% vs last week", CheckCircle2],
-  ["Avg. build", "1m 21s", "↓ 12s vs last week", Clock3]
+const metrics: Array<{ label: string; value: string; note: string; Icon: LucideIcon }> = [
+  { label: "Health score", value: "94 / 100", note: "2 points this week", Icon: ShieldCheck },
+  { label: "Deployments", value: "28", note: "7 this week", Icon: ArrowUpRight },
+  { label: "Success rate", value: "96.4%", note: "↑ 3.1% vs last week", Icon: CheckCircle2 },
+  { label: "Avg. build", value: "1m 21s", note: "↓ 12s vs last week", Icon: Clock3 }
 ];
 
 export default function Home() {
@@ -26,16 +26,14 @@ export default function Home() {
           <button className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-slate-200 hover:bg-white/[0.06]"><Github size={16}/> Connect GitHub</button>
         </div>
       </header>
-
       <section className="mx-auto max-w-7xl px-6 py-10">
         <div className="mb-8">
           <p className="mb-2 text-sm font-medium text-blue-400">Engineering overview</p>
           <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Know what shipped. Know what broke.</h1>
           <p className="mt-3 max-w-2xl text-slate-400">A single view of repository activity, deployment health, build performance, and release risk.</p>
         </div>
-
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {metrics.map(([label, value, note, Icon]) => (
+          {metrics.map(({ label, value, note, Icon }) => (
             <div key={label} className="rounded-2xl border border-white/10 bg-white/[0.025] p-5">
               <div className="flex items-center justify-between text-slate-500"><span className="text-sm">{label}</span><Icon size={17}/></div>
               <p className="mt-5 text-2xl font-semibold">{value}</p>
@@ -43,7 +41,6 @@ export default function Home() {
             </div>
           ))}
         </div>
-
         <div className="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]">
           <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
             <div><h2 className="font-semibold">Recent deployments</h2><p className="mt-1 text-xs text-slate-500">Latest repository releases and build results</p></div>
