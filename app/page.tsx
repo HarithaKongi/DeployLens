@@ -1,10 +1,17 @@
-import { Activity, ArrowUpRight, CheckCircle2, Clock3, GitBranch, Github, ShieldCheck, TriangleAlert } from "lucide-react";
+import { Activity, ArrowUpRight, CheckCircle2, Clock3, GitBranch, Github, ShieldCheck, TriangleAlert, type LucideIcon } from "lucide-react";
 
 const deployments = [
   { repo: "AirAware", branch: "main", status: "Healthy", time: "12 min ago", duration: "1m 42s" },
   { repo: "Waste2Worth", branch: "main", status: "Healthy", time: "48 min ago", duration: "58s" },
   { repo: "RoadEcho", branch: "feature/replay", status: "Warning", time: "2h ago", duration: "2m 16s" },
   { repo: "CivicFix", branch: "main", status: "Healthy", time: "5h ago", duration: "1m 08s" }
+];
+
+const metrics: Array<[string, string, string, LucideIcon]> = [
+  ["Health score", "94 / 100", "2 points this week", ShieldCheck],
+  ["Deployments", "28", "7 this week", ArrowUpRight],
+  ["Success rate", "96.4%", "↑ 3.1% vs last week", CheckCircle2],
+  ["Avg. build", "1m 21s", "↓ 12s vs last week", Clock3]
 ];
 
 export default function Home() {
@@ -28,13 +35,8 @@ export default function Home() {
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {[
-            ["Health score", "94 / 100", "2 points this week", ShieldCheck],
-            ["Deployments", "28", "7 this week", ArrowUpRight],
-            ["Success rate", "96.4%", "↑ 3.1% vs last week", CheckCircle2],
-            ["Avg. build", "1m 21s", "↓ 12s vs last week", Clock3]
-          ].map(([label, value, note, Icon]) => (
-            <div key={String(label)} className="rounded-2xl border border-white/10 bg-white/[0.025] p-5">
+          {metrics.map(([label, value, note, Icon]) => (
+            <div key={label} className="rounded-2xl border border-white/10 bg-white/[0.025] p-5">
               <div className="flex items-center justify-between text-slate-500"><span className="text-sm">{label}</span><Icon size={17}/></div>
               <p className="mt-5 text-2xl font-semibold">{value}</p>
               <p className="mt-1 text-xs text-slate-500">{note}</p>
