@@ -1,34 +1,61 @@
 # DeployLens
 
-> Deployment intelligence for GitHub projects.
+> **Deployment intelligence for GitHub projects.**
 
-DeployLens is a developer-focused dashboard for understanding what shipped, how long it took, and where deployment risk is accumulating.
+DeployLens is a production-deployed developer dashboard that turns GitHub repository activity, Actions runs, deployment records, and release signals into an actionable engineering overview.
 
-## Product vision
+## What it does
 
-DeployLens connects GitHub repository activity with deployment signals so developers can quickly answer:
+- 🔐 **GitHub OAuth** — secure account connection with HTTP-only session cookies
+- 📦 **Repository intelligence** — browse accessible repositories and repository metadata
+- ⚙️ **GitHub Actions analytics** — live workflow runs and success-rate calculations
+- 🚀 **Deployment intelligence** — reads GitHub deployment records and environments
+- 🧭 **Repository health** — explainable health score derived from completed workflow success
+- 📝 **Commit intelligence** — latest default-branch commits with direct GitHub links
+- 🔔 **Webhook ingestion** — signed GitHub webhook endpoint with duplicate-delivery protection
+- 🗄️ **PostgreSQL + Prisma** — persistence layer for repositories, deployments, and webhook events
+- 📱 **Responsive UI** — dark engineering dashboard optimized for desktop and mobile
 
-- What deployed recently?
-- Which deployments failed?
-- How long are builds taking?
-- Which repositories are becoming unhealthy?
-- What changed around a failed release?
+## Architecture
 
-## Planned capabilities
-
-- GitHub repository connection
-- Deployment history and release timeline
-- Build duration and success-rate analytics
-- Failed deployment detection
-- Repository health scoring
-- Environment health checks
-- Webhook-driven updates
-- Deployment detail pages
-- Engineering activity overview
+```text
+                    GitHub
+                       │
+              OAuth + REST API
+                       │
+                       ▼
+                Next.js App
+             ┌─────────┴─────────┐
+             │                   │
+        Live API data       Signed Webhooks
+             │                   │
+             └─────────┬─────────┘
+                       ▼
+                    Prisma
+                       │
+                       ▼
+                  PostgreSQL
+                       │
+                       ▼
+              DeployLens Dashboard
+```
 
 ## Stack
 
-Next.js · TypeScript · Tailwind CSS · PostgreSQL · Prisma · GitHub API
+- Next.js 15
+- React 19
+- TypeScript
+- Tailwind CSS
+- Prisma
+- PostgreSQL
+- GitHub REST API
+- GitHub OAuth
+- GitHub Webhooks
+- Vercel
+
+## Production
+
+**Live application:** https://deploylens-iota.vercel.app
 
 ## Local development
 
@@ -38,37 +65,53 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Then open http://localhost:3000.
+Required environment variables:
 
-For database-backed features, configure `DATABASE_URL` and run:
+- `DATABASE_URL`
+- `GITHUB_CLIENT_ID`
+- `GITHUB_CLIENT_SECRET`
+- `GITHUB_PRIVATE_KEY` (required for GitHub App operations)
+- `GITHUB_INSTALLATION_OWNER`
+- `GITHUB_WEBHOOK_SECRET`
+- `NEXT_PUBLIC_APP_URL`
+- `SESSION_SECRET`
 
-```bash
-npx prisma generate
-npx prisma db push
-```
+Never commit secrets, private keys, OAuth client secrets, or production database credentials.
 
-## Architecture
+## Webhook configuration
+
+Configure the GitHub App webhook URL as:
 
 ```text
-GitHub API / Webhooks
-        │
-        ▼
- Next.js API layer
-        │
-        ├── Repository signals
-        ├── Deployment events
-        └── Health calculations
-                │
-                ▼
-          PostgreSQL
-                │
-                ▼
-       DeployLens dashboard
+https://deploylens-iota.vercel.app/api/webhooks/github
 ```
 
-## Status
+Use the same secret configured in `GITHUB_WEBHOOK_SECRET`.
 
-🚧 **In active development.** The first milestone establishes the product shell, data model, and deployment dashboard.
+Enable deployment-related events, especially:
+
+- `deployment`
+- `deployment_status`
+
+The endpoint verifies `X-Hub-Signature-256` before accepting an event and stores delivery IDs to prevent duplicate processing.
+
+## API surface
+
+- `/api/auth/github` — start GitHub OAuth
+- `/api/auth/github/callback` — complete OAuth
+- `/api/auth/session` — inspect the application session
+- `/api/auth/logout` — clear the session
+- `/api/github/me` — connected GitHub account
+- `/api/github/repositories` — authenticated repositories
+- `/api/github/repository?repo=...` — repository intelligence
+- `/api/webhooks/github` — signed webhook ingestion
+- `/api/health` — application health endpoint
+
+## Project status
+
+**v1.0 — Portfolio-ready**
+
+The application is deployed and its core GitHub integration, live repository intelligence, workflow analytics, deployment records, persistence model, and webhook ingestion are implemented.
 
 ## Author
 
