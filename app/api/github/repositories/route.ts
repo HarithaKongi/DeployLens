@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
-import { listPublicRepositories } from "@/lib/github";
+import { cookies } from "next/headers";
+import { listAuthenticatedRepositories } from "@/lib/github";
 
-export async function GET(request: Request) {
-  const username = new URL(request.url).searchParams.get("username");
-  if (!username) return NextResponse.json({ error: "username is required" }, { status: 400 });
+export async function GET() {
+  const token = (await cookies()).get("deploylens_github_token")?.value;
+  if (!token) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+
   try {
-    const repositories = await listPublicRepositories(username);
+    const repositories = await listAuthenticatedRepositories(token);
     return NextResponse.json({ repositories });
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : "GitHub request failed" }, { status: 502 });
